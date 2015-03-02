@@ -14,7 +14,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/becker.jar" sourcepath="Y:/ICTP 11/JCreator setup files students/Robots/beckerSrc.zip">
 		<attributes>
-			<attribute name="javadoc_location" value="file:/Y:/ICTP%2011/JCreator%20setup%20files%20students/Robots/doc/"/>
+			<attribute name="javadoc_location" value="http://www.learningwithrobots.com/doc/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">

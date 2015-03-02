@@ -1,5 +1,5 @@
 package ca.tonsaker.multiplayerbeckbots.main;
 
-public class Client {
+public class BeckServer {
 
 }

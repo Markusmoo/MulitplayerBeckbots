@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JList;
+import javax.swing.UIManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,31 +26,23 @@ public class LobbyGUI extends JFrame implements ActionListener{
 	private JTextField ipAddressText;
 	private JTextField portTextAddress;
 	private JButton btnStart;
+	private JButton btnHost;
 	private JButton btnConnect;
 	
 	private JList<String> playerList;
 	private Vector<String> players;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LobbyGUI frame = new LobbyGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	private JTextField textField;
+	private JLabel lblUsername;
+	
 	/**
 	 * Create the frame.
 	 */
 	public LobbyGUI() {
+		try { 
+		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 685, 477);
 		contentPane = new JPanel();
@@ -61,36 +54,35 @@ public class LobbyGUI extends JFrame implements ActionListener{
 		btnConnect = new JButton("Connect");
 		sl_contentPane.putConstraint(SpringLayout.WEST, btnConnect, 10, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnConnect, -10, SpringLayout.SOUTH, contentPane);
+		btnConnect.addActionListener(this);
 		contentPane.add(btnConnect);
 		
 		JLabel lblIpAddress = new JLabel("IP Address:");
 		contentPane.add(lblIpAddress);
 		
 		ipAddressText = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblIpAddress, 3, SpringLayout.NORTH, ipAddressText);
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblIpAddress, -6, SpringLayout.WEST, ipAddressText);
 		sl_contentPane.putConstraint(SpringLayout.WEST, ipAddressText, 163, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, ipAddressText, -10, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblIpAddress, -11, SpringLayout.WEST, ipAddressText);
 		contentPane.add(ipAddressText);
 		ipAddressText.setColumns(10);
 		
-		JButton btnHost = new JButton("Host");
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnHost, -3, SpringLayout.NORTH, btnConnect);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblIpAddress, 31, SpringLayout.EAST, btnHost);
+		btnHost = new JButton("Host");
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnHost, 0, SpringLayout.WEST, btnConnect);
 		btnHost.addActionListener(this);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnHost, 10, SpringLayout.WEST, contentPane);
 		contentPane.add(btnHost);
 		
 		portTextAddress = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, ipAddressText, -11, SpringLayout.NORTH, portTextAddress);
-		sl_contentPane.putConstraint(SpringLayout.EAST, portTextAddress, 0, SpringLayout.EAST, ipAddressText);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, ipAddressText, -6, SpringLayout.NORTH, portTextAddress);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, portTextAddress, 1, SpringLayout.NORTH, btnConnect);
-		sl_contentPane.putConstraint(SpringLayout.WEST, portTextAddress, 80, SpringLayout.EAST, btnConnect);
+		sl_contentPane.putConstraint(SpringLayout.EAST, portTextAddress, -10, SpringLayout.EAST, contentPane);
 		contentPane.add(portTextAddress);
 		portTextAddress.setColumns(10);
 		
 		JLabel lblPort = new JLabel("Port:");
-		sl_contentPane.putConstraint(SpringLayout.EAST, lblPort, -11, SpringLayout.WEST, portTextAddress);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblIpAddress, -12, SpringLayout.NORTH, lblPort);
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblPort, 69, SpringLayout.EAST, btnConnect);
+		sl_contentPane.putConstraint(SpringLayout.WEST, portTextAddress, 11, SpringLayout.EAST, lblPort);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblPort, 4, SpringLayout.NORTH, btnConnect);
 		contentPane.add(lblPort);
 		
@@ -101,17 +93,32 @@ public class LobbyGUI extends JFrame implements ActionListener{
 		
 		players = new Vector<String>();
 		playerList = new JList<String>(players);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, playerList, 6, SpringLayout.SOUTH, lblConnectedUsers);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, playerList, -13, SpringLayout.NORTH, btnHost);
-		sl_contentPane.putConstraint(SpringLayout.WEST, playerList, 10, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, playerList, -10, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, playerList, 5, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, playerList, -5, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnHost, 6, SpringLayout.SOUTH, playerList);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, playerList, 16, SpringLayout.SOUTH, lblConnectedUsers);
 		contentPane.add(playerList);
 		
 		btnStart = new JButton("Start");
-		btnStart.setEnabled(false);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnStart, 0, SpringLayout.NORTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnStart, -4, SpringLayout.NORTH, lblConnectedUsers);
 		sl_contentPane.putConstraint(SpringLayout.EAST, btnStart, 0, SpringLayout.EAST, ipAddressText);
+		btnStart.setEnabled(false);
+		btnStart.addActionListener(this);
 		contentPane.add(btnStart);
+		
+		textField = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, playerList, -6, SpringLayout.NORTH, textField);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textField, 0, SpringLayout.WEST, ipAddressText);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, textField, -6, SpringLayout.NORTH, ipAddressText);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textField, -10, SpringLayout.EAST, contentPane);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		lblUsername = new JLabel("Username:");
+		sl_contentPane.putConstraint(SpringLayout.WEST, lblIpAddress, -5, SpringLayout.WEST, lblUsername);
+		sl_contentPane.putConstraint(SpringLayout.NORTH, lblUsername, 3, SpringLayout.NORTH, textField);
+		sl_contentPane.putConstraint(SpringLayout.EAST, lblUsername, -6, SpringLayout.WEST, textField);
+		contentPane.add(lblUsername);
 	}
 	
 	public void addPlayer(String playerName){
@@ -128,7 +135,13 @@ public class LobbyGUI extends JFrame implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		Object src = e.getSource();
+		if(src == btnConnect){
+			
+		}else if(src == btnHost){
+			
+		}else if(src == btnStart){
+			
+		}
 	}
 }
