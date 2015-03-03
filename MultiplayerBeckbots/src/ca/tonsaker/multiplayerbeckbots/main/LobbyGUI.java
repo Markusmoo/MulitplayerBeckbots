@@ -14,6 +14,7 @@ import javax.swing.UIManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.Vector;
 
 public class LobbyGUI extends JFrame implements ActionListener{
@@ -137,9 +138,19 @@ public class LobbyGUI extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
 		if(src == btnConnect){
-			
+			BeckClient bClient = new BeckClient(this.textField.getText(), this.ipAddressText.getText(), this.portTextAddress.getText(), players);
+			try {
+				bClient.connect();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}else if(src == btnHost){
-			
+			BeckServer bServ = new BeckServer(this.ipAddressText.getText(), this.portTextAddress.getText(), players);
+			try {
+				bServ.startServer();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}else if(src == btnStart){
 			
 		}

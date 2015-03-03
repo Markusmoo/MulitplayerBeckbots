@@ -2,6 +2,7 @@ package ca.tonsaker.multiplayerbeckbots.main;
 
 import java.awt.Point;
 import java.io.IOException;
+import java.util.Vector;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -11,10 +12,12 @@ public class BeckClient extends Client{
 	
 	protected String username;
 	
+	protected Vector<String> players;
+	
 	protected String ip;
 	protected int port;
 	
-	public BeckClient(String username, String ip, String port){
+	public BeckClient(String username, String ip, String port, Vector<String> players){
 		super();
 		
 		if(username.trim().equals("")) throw new IllegalArgumentException("Username cannot be only spaces or be empty.");
@@ -24,9 +27,16 @@ public class BeckClient extends Client{
 		this.username = username.trim();
 		this.ip = ip.trim();
 		this.port = Integer.parseInt(port);
+		
+		this.players = players;
+		
+		this.getKryo().register(String.class);
+		
+		this.start();
 	}
 	
 	public void connect() throws IOException{
+		System.out.println("Connecting to: "+ip+":"+port);
 		this.connect(5000, ip, port);
 		this.addListener(new Listener(){
 			
@@ -35,6 +45,8 @@ public class BeckClient extends Client{
 			}
 			
 		});
+		this.sendTCP(username);
+		System.out.println("Connected to: "+ip+":"+port);
 	}
 	
 	public void sendCoord(Point coord){
