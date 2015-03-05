@@ -1,10 +1,9 @@
 package ca.tonsaker.multiplayerbeckbots.main;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultListModel;
 import javax.swing.SpringLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -31,7 +30,7 @@ public class LobbyGUI extends JFrame implements ActionListener{
 	private JButton btnConnect;
 	
 	private JList<String> playerList;
-	private Vector<String> players;
+	private DefaultListModel<String> players;
 	private JTextField textField;
 	private JLabel lblUsername;
 	
@@ -92,7 +91,7 @@ public class LobbyGUI extends JFrame implements ActionListener{
 		sl_contentPane.putConstraint(SpringLayout.WEST, lblConnectedUsers, 0, SpringLayout.WEST, btnConnect);
 		contentPane.add(lblConnectedUsers);
 		
-		players = new Vector<String>();
+		players = new DefaultListModel<String>();
 		playerList = new JList<String>(players);
 		sl_contentPane.putConstraint(SpringLayout.WEST, playerList, 5, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, playerList, -5, SpringLayout.EAST, contentPane);
@@ -123,11 +122,11 @@ public class LobbyGUI extends JFrame implements ActionListener{
 	}
 	
 	public void addPlayer(String playerName){
-		players.add(playerName);
+		players.addElement(playerName);
 	}
 
 	public void removePlayer(String playerName){
-		players.remove(playerName);
+		players.removeElement(playerName);
 	}
 	
 	public void removeAllPlayers(){
@@ -138,18 +137,31 @@ public class LobbyGUI extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
 		if(src == btnConnect){
-			BeckClient bClient = new BeckClient(this.textField.getText(), this.ipAddressText.getText(), this.portTextAddress.getText(), players);
+			BeckClient bClient = new BeckClient(textField.getText(), ipAddressText.getText(), portTextAddress.getText(), this);
 			try {
 				bClient.connect();
 			} catch (IOException e1) {
 				e1.printStackTrace();
+			}finally{
+				textField.setEnabled(false);
+				ipAddressText.setEnabled(false);
+				portTextAddress.setEnabled(false);
+				btnHost.setEnabled(false);
 			}
 		}else if(src == btnHost){
-			BeckServer bServ = new BeckServer(this.ipAddressText.getText(), this.portTextAddress.getText(), players);
+			BeckServer bServ = new BeckServer(ipAddressText.getText(), portTextAddress.getText(), this);
+			BeckClient bClient = new BeckClient(textField.getText(), ipAddressText.getText(), portTextAddress.getText(), this);
 			try {
 				bServ.startServer();
+				bClient.connect();
 			} catch (IOException e1) {
 				e1.printStackTrace();
+			}finally{
+				textField.setEnabled(false);
+				ipAddressText.setEnabled(false);
+				portTextAddress.setEnabled(false);
+				btnHost.setEnabled(false);
+				btnStart.setEnabled(true);
 			}
 		}else if(src == btnStart){
 			

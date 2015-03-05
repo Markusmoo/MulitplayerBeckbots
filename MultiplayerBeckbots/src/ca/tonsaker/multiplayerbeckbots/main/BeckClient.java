@@ -12,13 +12,15 @@ public class BeckClient extends Client{
 	
 	protected String username;
 	
-	protected Vector<String> players;
+	protected LobbyGUI players;
 	
 	protected String ip;
 	protected int port;
 	
-	public BeckClient(String username, String ip, String port, Vector<String> players){
+	public BeckClient(String username, String ip, String port, LobbyGUI players){
 		super();
+		
+		Network.register(this);
 		
 		if(username.trim().equals("")) throw new IllegalArgumentException("Username cannot be only spaces or be empty.");
 		if(ip.trim().equals("")) throw new IllegalArgumentException("IP cannot be null.");
@@ -31,17 +33,17 @@ public class BeckClient extends Client{
 		this.players = players;
 		
 		this.getKryo().register(String.class);
-		
-		this.start();
 	}
 	
 	public void connect() throws IOException{
 		System.out.println("Connecting to: "+ip+":"+port);
+		this.start();
 		this.connect(5000, ip, port);
 		this.addListener(new Listener(){
 			
 			public void received(Connection connect, Object obj){
-				
+				System.out.println("------------CLIENT: "+obj);
+				if(obj instanceof String) players.addPlayer(obj.toString());
 			}
 			
 		});

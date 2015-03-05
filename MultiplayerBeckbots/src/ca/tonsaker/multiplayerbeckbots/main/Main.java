@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.minlog.Log;
 
 import becker.robots.City;
 import becker.robots.CityView;
@@ -32,6 +33,7 @@ public class Main extends CityView{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Log.set(Log.LEVEL_TRACE);  //TODO DEBUGGER
 					LobbyGUI frame = new LobbyGUI();
 					frame.setVisible(true);
 				} catch (Exception e) {
